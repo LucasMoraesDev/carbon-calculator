@@ -1,10 +1,9 @@
 /**
- * ROUTES-DATA.JS
+ * ROUTES-DATA.js
  * Question routes and data collection structure
  */
 
 const ROUTES_DATA = {
-    // All questions for the Intake Agent
     questions: [
         {
             id: 'transport_km',
@@ -64,56 +63,20 @@ const ROUTES_DATA = {
         }
     ],
     
-    // Emission factors for each category
-    factors: {
-        transport: {
-            base_emission: 'kg CO2e per km',
-            factors: {
-                Gasolina: 0.192,
-                Etanol: 0.112,
-                Diesel: 0.168,
-                Elétrico: 0.05
-            }
-        },
-        energy: {
-            base_emission: 'kg CO2e per kWh',
-            factor: 0.084
-        },
-        diet: {
-            base_emission: 'kg CO2e per year',
-            factors: {
-                'Consumo carne diariamente': 1600,
-                'Carne algumas vezes por semana': 1100,
-                'Pescetariano': 800,
-                'Vegetariano': 500,
-                'Vegano': 350
-            }
-        }
-    },
-    
-    // Recommendation templates
     recommendations: {
         transport: [
             {
-                title: 'Reduza o uso do carro',
+                title: '🚗 Reduza o uso do carro',
                 description: 'Troque 2 dias de carro por transporte público ou bicicleta',
                 impact: 'high',
                 effort: 'medium',
                 reduction: 0.9,
                 savings: 'R$ 240/ano'
-            },
-            {
-                title: 'Compartilhe caronas',
-                description: 'Utilize aplicativos de carona ou organize com colegas',
-                impact: 'medium',
-                effort: 'medium',
-                reduction: 0.5,
-                savings: 'R$ 180/ano'
             }
         ],
         energy: [
             {
-                title: 'Troque lâmpadas por LED',
+                title: '💡 Troque lâmpadas por LED',
                 description: 'Substitua todas as lâmpadas por modelos LED',
                 impact: 'low',
                 effort: 'low',
@@ -121,25 +84,17 @@ const ROUTES_DATA = {
                 savings: 'R$ 100/ano'
             },
             {
-                title: 'Use ar-condicionado conscientemente',
+                title: '❄️ Use ar-condicionado conscientemente',
                 description: 'Mantenha em 23°C e limpe os filtros mensalmente',
                 impact: 'medium',
                 effort: 'low',
                 reduction: 0.3,
                 savings: 'R$ 150/ano'
-            },
-            {
-                title: 'Instale energia solar',
-                description: 'Considere instalar painéis solares para redução drástica',
-                impact: 'high',
-                effort: 'high',
-                reduction: 1.5,
-                savings: 'R$ 900/ano'
             }
         ],
         food: [
             {
-                title: 'Reduza o consumo de carne vermelha',
+                title: '🥩 Reduza o consumo de carne vermelha',
                 description: 'Diminua para 3 vezes por semana e opte por carnes brancas',
                 impact: 'high',
                 effort: 'medium',
@@ -147,37 +102,23 @@ const ROUTES_DATA = {
                 savings: 'R$ 180/ano'
             },
             {
-                title: 'Experimente refeições vegetarianas',
+                title: '🌱 Experimente refeições vegetarianas',
                 description: 'Adote 2 dias por semana sem carne',
                 impact: 'medium',
                 effort: 'low',
                 reduction: 0.3,
                 savings: 'R$ 90/ano'
-            },
-            {
-                title: 'Adote uma dieta vegetariana',
-                description: 'Transição gradual para alimentação baseada em plantas',
-                impact: 'high',
-                effort: 'high',
-                reduction: 1.1,
-                savings: 'R$ 360/ano'
             }
         ]
     },
     
-    // Goals configuration
     goals: {
-        default_reduction_target: 0.20, // 20%
+        default_reduction_target: 0.20,
         achievements: [
-            { threshold: 20, title: 'Primeiro passo para a neutralidade', icon: '🏅' },
-            { threshold: 50, title: 'Campeão da Sustentabilidade', icon: '🌟' },
-            { threshold: 75, title: 'Guardião do Planeta', icon: '🌍' },
-            { threshold: 100, title: 'Herói do Clima', icon: '🎉' }
+            { threshold: 20, title: '🏅 Primeiro passo para a neutralidade' },
+            { threshold: 50, title: '🌟 Campeão da Sustentabilidade' },
+            { threshold: 75, title: '🌍 Guardião do Planeta' },
+            { threshold: 100, title: '🎉 Herói do Clima' }
         ]
     }
 };
-
-// Export for use
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = ROUTES_DATA;
-}

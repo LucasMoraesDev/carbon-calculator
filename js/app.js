@@ -1,9 +1,8 @@
 /**
- * APP.JS
+ * APP.js
  * Main application controller and initialization
  */
 
-// Application state
 let appState = {
     currentAgent: 0,
     totalAgents: 7,
@@ -14,44 +13,43 @@ let appState = {
     goals: null
 };
 
-/**
- * Initialize the application
- */
+document.addEventListener('DOMContentLoaded', function() {
+    initApp();
+});
+
 function initApp() {
-    console.log('Carbon Footprint Calculator - Multi-Agent System');
+    console.log('🌍 Carbon Footprint Calculator - Multi-Agent System');
     
-    // Update progress display
     UI.updateProgress(0, appState.totalAgents);
-    
-    // Set initial agent status
     UI.updateAgentStatus(0);
     
-    // Add event listeners
-    document.getElementById('prevBtn')?.addEventListener('click', prevStep);
-    document.getElementById('nextBtn')?.addEventListener('click', nextStep);
+    const startBtn = document.getElementById('startBtn');
+    if (startBtn) {
+        startBtn.addEventListener('click', startJourney);
+    }
+    
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (prevBtn) prevBtn.addEventListener('click', prevStep);
+    if (nextBtn) nextBtn.addEventListener('click', nextStep);
 }
 
-/**
- * Start the journey
- */
 function startJourney() {
     appState.currentAgent = 1;
     UI.updateProgress(appState.currentAgent, appState.totalAgents);
     UI.updateAgentStatus(appState.currentAgent);
     
-    // Show navigation
-    document.getElementById('navigation').style.display = 'flex';
+    document.getElementById('navigation').classList.remove('hidden');
     
-    // Render intake form
     const agentContent = document.getElementById('agentContent');
     if (agentContent) {
         agentContent.innerHTML = UI.renderIntakeForm(ROUTES_DATA.questions, appState.answers);
     }
+    
+    UI.scrollToElement('agentCard');
 }
 
-/**
- * Collect answers from form
- */
 function collectAnswers() {
     for (const question of ROUTES_DATA.questions) {
         let value;
@@ -70,40 +68,25 @@ function collectAnswers() {
     }
 }
 
-/**
- * Validate answers
- */
 function validateAnswers() {
     for (const question of ROUTES_DATA.questions) {
         if (question.required && !appState.answers[question.id]) {
-            alert(`Por favor, responda: ${question.text}`);
+            alert(`❌ Por favor, responda: ${question.text}`);
             return false;
         }
     }
     return true;
 }
 
-/**
- * Process all agents
- */
 function processAgents() {
-    UI.showLoading(CONFIG.AGENTS[appState.currentAgent].name);
+    const submitButton = document.querySelector('.form-submit');
+    UI.showLoading(submitButton);
     
-    // Simulate processing delay for better UX
     setTimeout(() => {
         try {
-            // Agent 2: Factors - Process data
             const emissions = Calculator.calculateTotalEmissions(appState.answers);
             appState.emissions = emissions;
             
-            // Agent 3: Calculator - Already done in calculateTotalEmissions
-            appState.calculatorResult = {
-                total_ton: emissions.total_ton,
-                main_sources: emissions.main_sources,
-                comparison: emissions.comparison_vs_brazil
-            };
-            
-            // Agent 4: Explainability - Generate analogies
             const analogies = Calculator.generateAnalogies(parseFloat(emissions.total_ton));
             const explanationData = {
                 total_ton: emissions.total_ton,
@@ -112,113 +95,70 @@ function processAgents() {
                 analogies: analogies
             };
             
-            // Agent 5: Advisor - Generate recommendations
             const recommendations = Calculator.generateRecommendations(appState.answers, emissions);
             appState.recommendations = recommendations;
             
-            // Agent 6: Goal - Calculate goals
             const goals = Calculator.calculateGoals(parseFloat(emissions.total_ton), recommendations);
             appState.goals = goals;
             
-            // Render results
             const resultsHtml = UI.renderResults(emissions, explanationData, recommendations, goals);
-            const resultsSection = document.getElementById('resultsSection');
-            if (resultsSection) {
-                resultsSection.innerHTML = resultsHtml;
-                resultsSection.style.display = 'block';
-            }
+            const recommendationsHtml = UI.renderRecommendations(recommendations);
+            const goalsHtml = UI.renderGoals(goals);
             
-            // Update progress to completed
+            document.getElementById('results-content').innerHTML = resultsHtml;
+            document.getElementById('recommendations-content').innerHTML = recommendationsHtml;
+            document.getElementById('goals-content').innerHTML = goalsHtml;
+            
+            UI.showElement('results');
+            UI.showElement('recommendations');
+            UI.showElement('goals');
+            
             appState.currentAgent = appState.totalAgents;
             UI.updateProgress(appState.currentAgent, appState.totalAgents);
             
-            // Hide navigation, show results
-            document.getElementById('navigation').style.display = 'none';
-            document.getElementById('agentCard').style.display = 'none';
+            document.getElementById('navigation').classList.add('hidden');
+            document.getElementById('agentCard').classList.add('hidden');
             
-            UI.scrollToTop();
+            UI.scrollToElement('results');
             
         } catch (error) {
-            console.error('Error processing agents:', error);
-            UI.showError('Ocorreu um erro ao processar seus dados. Por favor, tente novamente.');
+            console.error('Error:', error);
+            alert('❌ Ocorreu um erro ao calcular. Por favor, tente novamente.');
+        } finally {
+            UI.hideLoading(submitButton);
         }
     }, 800);
 }
 
-/**
- * Next step handler
- */
 function nextStep() {
     if (appState.currentAgent === 1) {
-        // Collect answers from intake form
         collectAnswers();
         
-        // Validate answers
         if (!validateAnswers()) {
             return;
         }
         
-        // Process all agents
         processAgents();
     }
 }
 
-/**
- * Previous step handler
- */
 function prevStep() {
     if (appState.currentAgent > 1) {
         appState.currentAgent--;
         UI.updateProgress(appState.currentAgent, appState.totalAgents);
         UI.updateAgentStatus(appState.currentAgent);
         
-        // Show intake form again
         const agentContent = document.getElementById('agentContent');
         if (agentContent) {
             agentContent.innerHTML = UI.renderIntakeForm(ROUTES_DATA.questions, appState.answers);
         }
         
-        document.getElementById('resultsSection').style.display = 'none';
-        document.getElementById('agentCard').style.display = 'block';
-        UI.scrollToTop();
+        UI.hideElement('results');
+        UI.hideElement('recommendations');
+        UI.hideElement('goals');
+        document.getElementById('agentCard').classList.remove('hidden');
+        document.getElementById('navigation').classList.remove('hidden');
+        
+        UI.scrollToElement('agentCard');
     }
 }
-
-/**
- * Reset application
- */
-function resetApp() {
-    appState = {
-        currentAgent: 0,
-        totalAgents: 7,
-        answers: {},
-        emissions: null,
-        calculatorResult: null,
-        recommendations: null,
-        goals: null
-    };
-    
-    document.getElementById('navigation').style.display = 'none';
-    document.getElementById('resultsSection').style.display = 'none';
-    document.getElementById('agentCard').style.display = 'block';
-    document.getElementById('agentContent').innerHTML = `
-        <div class="welcome-message">
-            <h3>Welcome to Carbon Footprint Calculator</h3>
-            <p>I'll guide you through 7 specialized agents to calculate, understand, and reduce your carbon footprint.</p>
-            <button class="btn-primary" onclick="window.startJourney()">Start Journey →</button>
-        </div>
-    `;
-    
-    UI.updateProgress(0, appState.totalAgents);
-    UI.updateAgentStatus(0);
-}
-
-// Make functions globally available
-window.initApp = initApp;
-window.startJourney = startJourney;
-window.nextStep = nextStep;
-window.prevStep = prevStep;
-window.resetApp = resetApp;
-
-// Initialize on load
-document.addEventListener('DOMContentLoaded', initApp);

@@ -1,68 +1,57 @@
 # 🌍 Carbon Footprint Calculator - Multi-Agent System
 
-A complete carbon footprint calculator built with 7 specialized agents that work together to calculate, explain, and help reduce your environmental impact.
+Uma calculadora completa de pegada de carbono construída com 7 agentes especializados que trabalham em conjunto para calcular, explicar e ajudar a reduzir o impacto ambiental.
 
-## 🤖 The 7 Agents
 
-| Agent | Responsibility |
-|-------|---------------|
-| **Orchestrator** | Controls conversation flow and state management |
-| **Intake** | Collects personal data empathetically |
-| **Factors** | Applies emission factors (GHG Protocol / IPCC) |
-| **Calculator** | Calculates total carbon footprint |
-| **Explainability** | Translates numbers into human-friendly insights |
-| **Advisor** | Generates personalized reduction recommendations |
-| **Goal** | Sets goals, tracks progress, and gamifies |
+## 🤖 Os 7 Agentes
 
-## 📊 Emission Factors Used
+| Agente | Responsabilidade |
+|--------|------------------|
+| **Orchestrator** | Controla o fluxo da conversa e estado |
+| **Intake** | Coleta dados pessoais de forma empática |
+| **Factors** | Aplica fatores de emissão (GHG Protocol/IPCC) |
+| **Calculator** | Calcula a pegada de carbono total |
+| **Explainability** | Traduz números em insights humanos |
+| **Advisor** | Gera recomendações personalizadas |
+| **Goal** | Define metas e acompanha progresso |
 
-Based on **GHG Protocol** and **IPCC** methodology:
+## 📊 Fatores de Emissão Utilizados
 
-- **Transport**: 0.192 kg CO₂e/km (gasoline)
-- **Energy**: 0.084 kg CO₂e/kWh (Brazil average)
-- **Diet**: 350-1600 kg CO₂e/year depending on dietary choices
+Baseados no **GHG Protocol** e metodologia **IPCC**:
 
-## 🚀 How to Run
+- **Transporte**: 0,192 kg CO₂e/km (gasolina)
+- **Energia**: 0,084 kg CO₂e/kWh (média Brasil)
+- **Alimentação**: 350-1600 kg CO₂e/ano dependendo da dieta
 
-1. Clone or download the repository
-2. Open `index.html` in any modern web browser
-3. Click "Start Journey" to begin
-4. Answer the questions from the Intake Agent
-5. View your complete carbon footprint analysis
+## 🚀 Como Executar
 
-## 📱 Features
+1. Clone o repositório
+2. Abra o arquivo `index.html` em qualquer navegador moderno
+3. Clique em "Iniciar Jornada" para começar
+4. Responda às perguntas do Agente de Coleta
+5. Visualize sua análise completa de pegada de carbono
 
-- ✅ Responsive design (mobile & desktop)
-- ✅ Progress tracking with visual timeline
-- ✅ Real-time calculations
-- ✅ Personalized recommendations with impact/effort ratings
-- ✅ Goal setting with gamification
-- ✅ Analogies for better understanding
-- ✅ Savings estimation for recommendations
+## 📱 Funcionalidades
 
-## 🔧 Technologies Used
+- ✅ Design responsivo (mobile e desktop)
+- ✅ Acompanhamento visual de progresso
+- ✅ Cálculos em tempo real
+- ✅ Recomendações personalizadas com classificação de impacto/esforço
+- ✅ Definição de metas com gamificação
+- ✅ Analogias para melhor compreensão
+- ✅ Estimativa de economia financeira
 
-- HTML5
-- CSS3 (with animations & responsive design)
-- Vanilla JavaScript (no frameworks)
-- Google Fonts (Inter)
+## 📈 Comparação com Média Brasil
 
-## 📈 Brazil Average Comparison
+A calculadora compara sua pegada com a **média brasileira de 4,5 tCO₂e por pessoa por ano**.
 
-The calculator compares your footprint to the **Brazilian average of 4.5 tCO₂e per capita per year**.
+## 🎯 Sistema de Metas
 
-## 🎯 Goal System
+- Meta padrão de redução: 20%
+- Acompanhamento de progresso baseado nas recomendações
+- Conquistas nos níveis: 20%, 50%, 75% e 100% de progresso
 
-- Default reduction target: 20%
-- Progress tracking based on implementing recommendations
-- Achievement badges at 20%, 50%, 75%, and 100% progress
+## 🚀 Deploy no GitHub Pages
 
-## 📝 License
+O projeto já inclui o workflow do GitHub Actions para deploy automático. Basta fazer o push para a branch `main` que o site será publicado em:
 
-MIT License - Free for personal and commercial use.
-
-## 🙏 Acknowledgments
-
-- GHG Protocol for emission factors
-- IPCC for climate change methodology
-- Digital Innovation One for the project inspiration

@@ -1,5 +1,5 @@
 /**
- * CONFIG.JS
+ * CONFIG.js
  * Global configuration and emission constants
  * Based on GHG Protocol and IPCC methodology
  */
@@ -11,7 +11,6 @@ const CONFIG = {
     
     // Emission factors (kg CO2e per unit)
     EMISSION_FACTORS: {
-        // Transport (kg CO2e per km)
         TRANSPORT: {
             GASOLINA: 0.192,
             ETANOL: 0.112,
@@ -25,10 +24,8 @@ const CONFIG = {
             }
         },
         
-        // Energy (kg CO2e per kWh - Brazil average)
         ENERGY: 0.084,
         
-        // Diet (kg CO2e per year)
         DIET: {
             'Consumo carne diariamente': 1600,
             'Carne algumas vezes por semana': 1100,
@@ -37,7 +34,6 @@ const CONFIG = {
             'Vegano': 350
         },
         
-        // Energy consumption ranges (kWh/month)
         ENERGY_RANGES: {
             'Até 150 kWh': 125,
             '150-300 kWh': 225,
@@ -45,18 +41,15 @@ const CONFIG = {
             'Não sei': 200
         },
         
-        // AC multiplier
         AC_MULTIPLIER: 1.3
     },
     
-    // Analogies for explainability
     ANALOGIES: {
-        CAR_EMISSION_PER_KM: 0.192, // kg CO2e per km
-        TREE_ABSORPTION_PER_YEAR: 21, // kg CO2e per tree per year
-        AIRPLANE_EMISSION_PER_HOUR: 250 // kg CO2e per flight hour
+        CAR_EMISSION_PER_KM: 0.192,
+        TREE_ABSORPTION_PER_YEAR: 21,
+        AIRPLANE_EMISSION_PER_HOUR: 250
     },
     
-    // Agent configuration
     AGENTS: [
         { id: 0, name: 'Orchestrator', icon: '🎭', description: 'Controls the conversation flow' },
         { id: 1, name: 'Intake', icon: '📋', description: 'Collects personal data empathetically' },
@@ -67,8 +60,3 @@ const CONFIG = {
         { id: 6, name: 'Goal', icon: '🏆', description: 'Sets goals and tracks progress' }
     ]
 };
-
-// Export for use
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CONFIG;
-}
