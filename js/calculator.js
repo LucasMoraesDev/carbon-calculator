@@ -1,5 +1,5 @@
 /**
- * CALCULATOR.js - CORRIGIDO
+ * CALCULATOR.js - CORRIGIDO (função calculateGoals)
  * All calculation logic for carbon footprint
  */
 
@@ -44,7 +44,6 @@ const Calculator = {
         const totalKg = transport + energy + food;
         const totalTon = totalKg / 1000;
         
-        // Calculate percentages - garantir que sejam números inteiros
         const total = transport + energy + food;
         const percentages = {
             transport: total > 0 ? Math.round((transport / total) * 100) : 0,
@@ -112,18 +111,20 @@ const Calculator = {
         return recommendations.slice(0, 5);
     },
 
+    /**
+     * CALCULATE GOALS - CORRIGIDO
+     * O progresso agora começa em 0% e só aumenta quando o usuário implementar ações
+     */
     calculateGoals: function(currentFootprint, recommendations) {
         const targetReduction = ROUTES_DATA.goals.default_reduction_target;
         const targetFootprint = currentFootprint * (1 - targetReduction);
         const reductionNeeded = currentFootprint - targetFootprint;
         
-        let potentialReduction = 0;
-        for (const rec of recommendations) {
-            potentialReduction += rec.reduction;
-        }
+        // PROGRESSO COMEÇA EM 0% - o usuário ainda não implementou nenhuma ação
+        // Em um sistema real, isso seria atualizado conforme o usuário marca ações como concluídas
+        const progressPercent = 0;
         
-        const progressPercent = Math.min(100, Math.round((potentialReduction / reductionNeeded) * 100));
-        
+        // Calcular conquistas baseado no progresso atual (0%)
         const achievements = [];
         for (const achievement of ROUTES_DATA.goals.achievements) {
             if (progressPercent >= achievement.threshold) {
@@ -137,7 +138,10 @@ const Calculator = {
             reduction_needed: reductionNeeded.toFixed(1),
             reduction_target: `${targetReduction * 100}%`,
             progress_percent: progressPercent,
-            achievements: achievements
+            achievements: achievements,
+            // Adicionar informações sobre potencial de redução
+            potential_reduction: recommendations.reduce((sum, rec) => sum + rec.reduction, 0).toFixed(1),
+            recommendations_count: recommendations.length
         };
     }
 };

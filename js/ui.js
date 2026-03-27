@@ -1,5 +1,5 @@
 /**
- * UI.js - CORRIGIDO
+ * UI.js
  * DOM manipulation and UI rendering functions
  */
 
@@ -76,7 +76,7 @@ const UI = {
     renderIntakeForm: function(questions, answers = {}) {
         let html = '';
         
-        questions.forEach((q, index) => {
+        questions.forEach((q) => {
             html += `<div class="form-group" data-question-id="${q.id}">
                         <label class="form-group__label">${q.text}</label>
                         <div class="form-group__helper-text">💡 ${q.explanation}</div>`;
@@ -115,7 +115,6 @@ const UI = {
     },
 
     renderResults: function(emissions, explanationData) {
-        // Garantir que os valores são números válidos
         const transportPercent = explanationData.breakdown.transporte || 0;
         const energyPercent = explanationData.breakdown.energia || 0;
         const foodPercent = explanationData.breakdown.alimentacao || 0;
@@ -240,7 +239,7 @@ const UI = {
                 <div class="results__card">
                     <div class="results__card-icon">🎯</div>
                     <div class="results__card-content">
-                        <h3 class="results__card-title">Meta</h3>
+                        <h3 class="results__card-title">META</h3>
                         <p class="results__card-value">${goals.reduction_target}</p>
                         <p class="results__card-subtitle">de redução até dezembro</p>
                     </div>
@@ -249,7 +248,7 @@ const UI = {
                 <div class="results__card">
                     <div class="results__card-icon">📉</div>
                     <div class="results__card-content">
-                        <h3 class="results__card-title">Meta Anual</h3>
+                        <h3 class="results__card-title">META ANUAL</h3>
                         <p class="results__card-value">${goals.target} tCO₂e</p>
                         <p class="results__card-subtitle">Redução necessária: ${goals.reduction_needed} t</p>
                     </div>
@@ -263,10 +262,39 @@ const UI = {
             </div>
         `;
         
+        // Adicionar informação sobre potencial de redução
+        if (goals.potential_reduction && goals.recommendations_count) {
+            html += `
+                <div class="analogies" style="margin-top: 16px; background-color: #e8f5e9;">
+                    <div class="analogies__title">💡 Potencial de Redução</div>
+                    <p style="font-size: 14px; margin-top: 8px;">
+                        Implementando as <strong>${goals.recommendations_count} recomendações</strong> sugeridas, 
+                        você pode reduzir até <strong>${goals.potential_reduction} tCO₂e/ano</strong>!
+                    </p>
+                    <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                        ⚠️ Marque as ações concluídas no seu dia a dia para acompanhar seu progresso real.
+                    </p>
+                </div>
+            `;
+        }
+        
+        // Mostrar conquistas (desbloqueadas ou bloqueadas)
         if (goals.achievements && goals.achievements.length > 0) {
             for (const achievement of goals.achievements) {
                 html += `<span class="badge">${achievement.title}</span>`;
             }
+        } else {
+            // Mostrar conquistas bloqueadas para motivar o usuário
+            html += `
+                <div style="margin-top: 16px;">
+                    <p style="font-size: 12px; color: #888; margin-bottom: 8px;">🔒 Conquistas a desbloquear:</p>
+            `;
+            if (ROUTES_DATA && ROUTES_DATA.goals && ROUTES_DATA.goals.achievements) {
+                for (const achievement of ROUTES_DATA.goals.achievements) {
+                    html += `<span class="badge" style="opacity: 0.5; background: #ccc;">🔒 ${achievement.title} (${achievement.threshold}%)</span>`;
+                }
+            }
+            html += `</div>`;
         }
         
         return html;
