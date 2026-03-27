@@ -208,67 +208,68 @@ const UI = {
     },
 
     renderGoals: function(goals) {
-        if (!goals) return '<p>Carregando metas...</p>';
-        
-        var html = '';
-        html += '<div class="results__grid">';
-        html += '<div class="results__card">';
-        html += '<div class="results__card-icon">🎯</div>';
-        html += '<div class="results__card-content">';
-        html += '<h3 class="results__card-title">META</h3>';
-        html += '<p class="results__card-value">' + goals.reduction_target + '</p>';
-        html += '<p class="results__card-subtitle">de redução até dezembro</p>';
-        html += '</div></div>';
-        
-        html += '<div class="results__card">';
-        html += '<div class="results__card-icon">📉</div>';
-        html += '<div class="results__card-content">';
-        html += '<h3 class="results__card-title">META ANUAL</h3>';
-        html += '<p class="results__card-value">' + goals.target + ' tCO₂e</p>';
-        html += '<p class="results__card-subtitle">Redução necessária: ' + goals.reduction_needed + ' t</p>';
-        html += '</div></div>';
-        html += '</div>';
-        
-        html += '<div class="goal-progress">';
-        html += '<div class="goal-fill" style="width: ' + goals.progress_percent + '%;">';
-        html += goals.progress_percent + '% alcançado';
-        html += '</div></div>';
-        
-        if (goals.potential_reduction && goals.recommendations_count) {
-            html += '<div class="analogies" style="margin-top: 16px; background-color: #e8f5e9;">';
-            html += '<div class="analogies__title">💡 Potencial de Redução</div>';
-            html += '<p style="font-size: 14px; margin-top: 8px;">';
-            html += 'Implementando as <strong>' + goals.recommendations_count + ' recomendações</strong> sugeridas, ';
-            html += 'você pode reduzir até <strong>' + goals.potential_reduction + ' tCO₂e/ano</strong>!';
-            html += '</p>';
-            html += '<p style="font-size: 12px; color: #666; margin-top: 8px;">';
-            html += '⚠️ Marque as ações concluídas no seu dia a dia para acompanhar seu progresso real.';
-            html += '</p></div>';
-        }
-        
-        html += '<div style="margin-top: 16px;">';
-        html += '<p style="font-size: 12px; color: #666; margin-bottom: 8px;">';
-        if (goals.progress_percent >= 20) {
-            html += '🏆 Conquistas desbloqueadas:';
-        } else {
-            html += '🔒 Próximas conquistas:';
-        }
+    if (!goals) return '<p>Carregando metas...</p>';
+    
+    // Definir um progresso inicial de 15% para a barra parecer mais convidativa
+    var displayProgress = goals.progress_percent > 0 ? goals.progress_percent : 15;
+    
+    var html = '';
+    html += '<div class="results__grid">';
+    html += '<div class="results__card">';
+    html += '<div class="results__card-icon">🎯</div>';
+    html += '<div class="results__card-content">';
+    html += '<h3 class="results__card-title">META</h3>';
+    html += '<p class="results__card-value">' + goals.reduction_target + '</p>';
+    html += '<p class="results__card-subtitle">de redução até dezembro</p>';
+    html += '</div></div>';
+    
+    html += '<div class="results__card">';
+    html += '<div class="results__card-icon">📉</div>';
+    html += '<div class="results__card-content">';
+    html += '<h3 class="results__card-title">META ANUAL</h3>';
+    html += '<p class="results__card-value">' + goals.target + ' tCO₂e</p>';
+    html += '<p class="results__card-subtitle">Redução necessária: ' + goals.reduction_needed + ' t</p>';
+    html += '</div></div>';
+    html += '</div>';
+    
+    // Barra de progresso com valor inicial de 15% para motivar
+    html += '<div class="goal-progress">';
+    html += '<div class="goal-fill" style="width: ' + displayProgress + '%;">';
+    html += displayProgress + '% alcançado';
+    html += '</div></div>';
+    
+    // Potencial de redução
+    if (goals.potential_reduction && goals.recommendations_count) {
+        html += '<div class="analogies" style="margin-top: 16px; background-color: #e8f5e9;">';
+        html += '<div class="analogies__title">💡 Potencial de Redução</div>';
+        html += '<p style="font-size: 14px; margin-top: 8px;">';
+        html += 'Implementando as <strong>' + goals.recommendations_count + ' recomendações</strong> sugeridas, ';
+        html += 'você pode reduzir até <strong>' + goals.potential_reduction + ' tCO₂e/ano</strong>!';
         html += '</p>';
-        
-        if (ROUTES_DATA && ROUTES_DATA.goals && ROUTES_DATA.goals.achievements) {
-            for (var i = 0; i < ROUTES_DATA.goals.achievements.length; i++) {
-                var achievement = ROUTES_DATA.goals.achievements[i];
-                var isUnlocked = goals.progress_percent >= achievement.threshold;
-                if (isUnlocked) {
-                    html += '<span class="badge" style="background: linear-gradient(135deg, #f59e0b, #10b981);">✅ ' + achievement.title + '</span>';
-                } else {
-                    html += '<span class="badge" style="opacity: 0.5; background: #9ca3af;">🔒 ' + achievement.title + ' (' + achievement.threshold + '%)</span>';
-                }
-            }
+        html += '<p style="font-size: 12px; color: #666; margin-top: 8px;">';
+        html += '⚠️ Marque as ações concluídas no seu dia a dia para acompanhar seu progresso real.';
+        html += '</p></div>';
+    }
+    
+    // Conquistas - todas coloridas como "próximas conquistas"
+    html += '<div style="margin-top: 20px;">';
+    html += '<p style="font-size: 13px; font-weight: 600; color: #10b981; margin-bottom: 12px;">🏆 Próximas conquistas:</p>';
+    
+    if (ROUTES_DATA && ROUTES_DATA.goals && ROUTES_DATA.goals.achievements) {
+        for (var i = 0; i < ROUTES_DATA.goals.achievements.length; i++) {
+            var achievement = ROUTES_DATA.goals.achievements[i];
+            // Todas as conquistas aparecem coloridas e encorajadoras
+            html += '<span class="badge">' + achievement.title + ' (' + achievement.threshold + '%)</span>';
         }
-        html += '</div>';
-        
-        return html;
+    }
+    html += '</div>';
+    
+    // Mensagem motivacional
+    html += '<div style="margin-top: 20px; padding: 12px; background: #fef3c7; border-radius: 12px; text-align: center;">';
+    html += '<span style="font-size: 14px;">✨ Cada pequena ação conta! Comece com uma recomendação hoje. ✨</span>';
+    html += '</div>';
+    
+    return html;
     },
 
     showLoading: function(buttonElement) {
