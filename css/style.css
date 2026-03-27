@@ -12,7 +12,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -226,6 +226,7 @@ body {
     cursor: pointer;
 }
 
+/* RESULTADOS - GRADE 2x2 */
 .results, .comparison, .carbon-goals {
     background: white;
     border-radius: 20px;
@@ -240,18 +241,27 @@ body {
     color: #1f2937;
 }
 
+/* Grid 2x2 para os cards */
 .results__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+    margin-bottom: 24px !important;
 }
 
+/* Estilo dos cards */
 .results__card {
     background: #f9fafb;
-    padding: 20px;
-    border-radius: 16px;
+    padding: 24px 20px;
+    border-radius: 20px;
     text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.results__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
 .results__card--highlight {
@@ -260,7 +270,7 @@ body {
 }
 
 .results__card-icon {
-    font-size: 32px;
+    font-size: 40px;
     margin-bottom: 12px;
 }
 
@@ -269,23 +279,32 @@ body {
     color: #6b7280;
     text-transform: uppercase;
     letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: 8px;
 }
 
 .results__card-value {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 28px;
+    font-weight: 800;
     color: #1f2937;
 }
 
 .results__card-value--large {
-    font-size: 32px;
+    font-size: 36px;
     color: #10b981;
 }
 
 .results__card-subtitle {
     font-size: 12px;
     color: #6b7280;
-    margin-top: 4px;
+    margin-top: 8px;
+}
+
+/* Responsivo: em telas pequenas vira 1 coluna */
+@media (max-width: 640px) {
+    .results__grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 
 .breakdown {
@@ -391,7 +410,6 @@ body {
     transition: width 0.3s;
 }
 
-/* Estilo para conquistas - coloridas e encorajadoras */
 .badge {
     display: inline-block;
     padding: 8px 16px;
@@ -407,19 +425,6 @@ body {
 
 .badge:hover {
     transform: translateY(-2px);
-}
-
-/* Conquistas bloqueadas - mais suaves mas ainda coloridas */
-.badge-locked {
-    display: inline-block;
-    padding: 8px 16px;
-    margin: 6px;
-    border-radius: 40px;
-    font-size: 13px;
-    font-weight: 500;
-    background: linear-gradient(135deg, #d1d5db, #9ca3af);
-    color: #4b5563;
-    opacity: 0.7;
 }
 
 .spinner {
@@ -448,13 +453,10 @@ body {
     display: none !important;
 }
 
+/* Responsivo */
 @media (max-width: 768px) {
     .agents-timeline {
         display: none;
-    }
-    
-    .results__grid {
-        grid-template-columns: 1fr;
     }
     
     .navigation {
