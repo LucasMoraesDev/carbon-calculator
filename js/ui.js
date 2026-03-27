@@ -262,7 +262,6 @@ const UI = {
             </div>
         `;
         
-        // Adicionar informação sobre potencial de redução
         if (goals.potential_reduction && goals.recommendations_count) {
             html += `
                 <div class="analogies" style="margin-top: 16px; background-color: #e8f5e9;">
@@ -278,24 +277,22 @@ const UI = {
             `;
         }
         
-        // Mostrar conquistas (desbloqueadas ou bloqueadas)
-        if (goals.achievements && goals.achievements.length > 0) {
-            for (const achievement of goals.achievements) {
-                html += `<span class="badge">${achievement.title}</span>`;
-            }
-        } else {
-            // Mostrar conquistas bloqueadas para motivar o usuário
-            html += `
-                <div style="margin-top: 16px;">
-                    <p style="font-size: 12px; color: #888; margin-bottom: 8px;">🔒 Conquistas a desbloquear:</p>
-            `;
-            if (ROUTES_DATA && ROUTES_DATA.goals && ROUTES_DATA.goals.achievements) {
-                for (const achievement of ROUTES_DATA.goals.achievements) {
-                    html += `<span class="badge" style="opacity: 0.5; background: #ccc;">🔒 ${achievement.title} (${achievement.threshold}%)</span>`;
+        html += `<div style="margin-top: 16px;">
+                    <p style="font-size: 12px; color: #888; margin-bottom: 8px;">
+                        ${goals.progress_percent > 0 ? '🏆 Conquistas desbloqueadas:' : '🔒 Conquistas a desbloquear:'}
+                    </p>`;
+        
+        if (ROUTES_DATA && ROUTES_DATA.goals && ROUTES_DATA.goals.achievements) {
+            for (const achievement of ROUTES_DATA.goals.achievements) {
+                const isUnlocked = goals.progress_percent >= achievement.threshold;
+                if (isUnlocked) {
+                    html += `<span class="badge">✅ ${achievement.title} (${achievement.threshold}%)</span>`;
+                } else {
+                    html += `<span class="badge" style="opacity: 0.4; background: #9ca3af;">🔒 ${achievement.title} (${achievement.threshold}%)</span>`;
                 }
             }
-            html += `</div>`;
         }
+        html += `</div>`;
         
         return html;
     },
