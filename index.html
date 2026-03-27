@@ -7,13 +7,12 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header class="header">
-        <h1 class="header__title">🌿 Carbon Footprint Calculator</h1>
-        <p class="header__subtitle">Sistema Multi-Agente para calcular, entender e reduzir sua pegada de carbono</p>
-    </header>
+    <div class="container">
+        <header class="header">
+            <h1 class="header__title">🌿 Carbon Footprint Calculator</h1>
+            <p class="header__subtitle">Sistema Multi-Agente para calcular, entender e reduzir sua pegada de carbono</p>
+        </header>
 
-    <main class="main">
-        <!-- Progress Section -->
         <div class="progress-section">
             <div class="progress-header">
                 <span>Progresso da Jornada</span>
@@ -25,7 +24,6 @@
             <div class="agents-timeline" id="agentsTimeline"></div>
         </div>
 
-        <!-- Agent Card -->
         <div id="agentCard" class="agent-card">
             <div class="agent-header">
                 <div class="agent-header__icon" id="agentIcon">🎭</div>
@@ -39,40 +37,38 @@
                         Eu vou te guiar através de 7 agentes especializados para calcular, entender e reduzir sua pegada de carbono.
                         Vamos começar sua jornada rumo à sustentabilidade!
                     </p>
-                    <button id="startBtn" class="form-submit">Iniciar Jornada →</button>
+                    <button id="startBtn" class="btn-primary">Iniciar Jornada →</button>
                 </div>
             </div>
         </div>
 
-        <!-- Navigation Buttons -->
         <div id="navigation" class="navigation hidden">
             <button id="prevBtn" class="btn-secondary">← Anterior</button>
             <button id="nextBtn" class="btn-primary">Próximo →</button>
         </div>
 
-        <!-- Results Sections -->
-        <section id="results" class="results hidden">
+        <div id="results" class="results hidden">
             <h2 class="section-title">📊 Sua Pegada de Carbono</h2>
-            <div id="results-content" class="results__content"></div>
-        </section>
+            <div id="results-content"></div>
+        </div>
 
-        <section id="recommendations" class="comparison hidden">
+        <div id="recommendations" class="comparison hidden">
             <h2 class="section-title">💡 Recomendações Personalizadas</h2>
-            <div id="recommendations-content" class="comparison__content"></div>
-        </section>
+            <div id="recommendations-content"></div>
+        </div>
 
-        <section id="goals" class="carbon-goals hidden">
+        <div id="goals" class="carbon-goals hidden">
             <h2 class="section-title">🎯 Metas e Progresso</h2>
-            <div id="goals-content" class="carbon-credits__content"></div>
-        </section>
-    </main>
+            <div id="goals-content"></div>
+        </div>
 
-    <footer class="footer">
-        <p class="footer__credits">Desenvolvido com ❤️ para DIO | Sistema Multi-Agente de Pegada de Carbono</p>
-    </footer>
+        <footer class="footer">
+            <p>Desenvolvido para DIO | Sistema Multi-Agente de Pegada de Carbono</p>
+        </footer>
+    </div>
 
-    <script src="js/routes-data.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/routes-data.js"></script>
     <script src="js/calculator.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
