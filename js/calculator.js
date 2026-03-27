@@ -1,19 +1,19 @@
 /**
- * CALCULATOR.js - CORRIGIDO (função calculateGoals)
+ * CALCULATOR.js
  * All calculation logic for carbon footprint
  */
 
 const Calculator = {
     calculateTransportEmissions: function(data) {
-        const kmPerWeek = parseFloat(data.transport_km) || 0;
-        const kmPerYear = kmPerWeek * 52;
+        var kmPerWeek = parseFloat(data.transport_km) || 0;
+        var kmPerYear = kmPerWeek * 52;
         
-        let fuelFactor = CONFIG.EMISSION_FACTORS.TRANSPORT.GASOLINA;
+        var fuelFactor = CONFIG.EMISSION_FACTORS.TRANSPORT.GASOLINA;
         if (data.fuel_type === 'Etanol') fuelFactor = CONFIG.EMISSION_FACTORS.TRANSPORT.ETANOL;
         else if (data.fuel_type === 'Diesel') fuelFactor = CONFIG.EMISSION_FACTORS.TRANSPORT.DIESEL;
         else if (data.fuel_type === 'Elétrico') fuelFactor = CONFIG.EMISSION_FACTORS.TRANSPORT.ELETRICO;
         
-        let publicTransportFactor = 1;
+        var publicTransportFactor = 1;
         if (data.public_transport === 'Sim, frequentemente') publicTransportFactor = CONFIG.EMISSION_FACTORS.TRANSPORT.PUBLIC_TRANSPORT_REDUCTION.FREQUENT;
         else if (data.public_transport === 'Às vezes') publicTransportFactor = CONFIG.EMISSION_FACTORS.TRANSPORT.PUBLIC_TRANSPORT_REDUCTION.SOMETIMES;
         else if (data.public_transport === 'Raramente') publicTransportFactor = CONFIG.EMISSION_FACTORS.TRANSPORT.PUBLIC_TRANSPORT_REDUCTION.RARELY;
@@ -22,13 +22,13 @@ const Calculator = {
     },
 
     calculateEnergyEmissions: function(data) {
-        let kwhMonth = CONFIG.EMISSION_FACTORS.ENERGY_RANGES[data.energy_kwh] || 200;
+        var kwhMonth = CONFIG.EMISSION_FACTORS.ENERGY_RANGES[data.energy_kwh] || 200;
         
         if (data.has_ac === 'Sim') {
-            kwhMonth *= CONFIG.EMISSION_FACTORS.AC_MULTIPLIER;
+            kwhMonth = kwhMonth * CONFIG.EMISSION_FACTORS.AC_MULTIPLIER;
         }
         
-        const kwhYear = kwhMonth * 12;
+        var kwhYear = kwhMonth * 12;
         return kwhYear * CONFIG.EMISSION_FACTORS.ENERGY;
     },
 
@@ -37,29 +37,31 @@ const Calculator = {
     },
 
     calculateTotalEmissions: function(rawData) {
-        const transport = this.calculateTransportEmissions(rawData);
-        const energy = this.calculateEnergyEmissions(rawData);
-        const food = this.calculateFoodEmissions(rawData);
+        var transport = this.calculateTransportEmissions(rawData);
+        var energy = this.calculateEnergyEmissions(rawData);
+        var food = this.calculateFoodEmissions(rawData);
         
-        const totalKg = transport + energy + food;
-        const totalTon = totalKg / 1000;
+        var totalKg = transport + energy + food;
+        var totalTon = totalKg / 1000;
         
-        const total = transport + energy + food;
-        const percentages = {
+        var total = transport + energy + food;
+        var percentages = {
             transport: total > 0 ? Math.round((transport / total) * 100) : 0,
             energy: total > 0 ? Math.round((energy / total) * 100) : 0,
             food: total > 0 ? Math.round((food / total) * 100) : 0
         };
         
-        const comparison = ((totalTon - CONFIG.BRAZIL_AVG_FOOTPRINT) / CONFIG.BRAZIL_AVG_FOOTPRINT * 100).toFixed(0);
+        var comparison = ((totalTon - CONFIG.BRAZIL_AVG_FOOTPRINT) / CONFIG.BRAZIL_AVG_FOOTPRINT * 100).toFixed(0);
         
-        const sources = [
+        var sources = [
             { name: 'Transporte', value: transport },
             { name: 'Energia', value: energy },
             { name: 'Alimentação', value: food }
         ];
-        sources.sort((a, b) => b.value - a.value);
-        const mainSources = sources.slice(0, 2).map(s => s.name);
+        sources.sort(function(a, b) {
+            return b.value - a.value;
+        });
+        var mainSources = [sources[0].name, sources[1].name];
         
         return {
             transport_kg: Math.round(transport),
@@ -68,15 +70,15 @@ const Calculator = {
             total_kg: Math.round(totalKg),
             total_ton: totalTon.toFixed(1),
             percentages: percentages,
-            comparison_vs_brazil: `${comparison > 0 ? '+' : ''}${comparison}%`,
+            comparison_vs_brazil: (comparison > 0 ? '+' : '') + comparison + '%',
             main_sources: mainSources
         };
     },
 
     generateAnalogies: function(totalTon) {
-        const carKm = Math.round(totalTon * 1000 / CONFIG.ANALOGIES.CAR_EMISSION_PER_KM);
-        const trees = Math.round(totalTon * 1000 / CONFIG.ANALOGIES.TREE_ABSORPTION_PER_YEAR);
-        const flightHours = Math.round(totalTon * 1000 / CONFIG.ANALOGIES.AIRPLANE_EMISSION_PER_HOUR);
+        var carKm = Math.round(totalTon * 1000 / CONFIG.ANALOGIES.CAR_EMISSION_PER_KM);
+        var trees = Math.round(totalTon * 1000 / CONFIG.ANALOGIES.TREE_ABSORPTION_PER_YEAR);
+        var flightHours = Math.round(totalTon * 1000 / CONFIG.ANALOGIES.AIRPLANE_EMISSION_PER_HOUR);
         
         return {
             car_km: carKm.toLocaleString(),
@@ -86,7 +88,7 @@ const Calculator = {
     },
 
     generateRecommendations: function(data, emissions) {
-        const recommendations = [];
+        var recommendations = [];
         
         if (emissions.transport_kg > 1000) {
             recommendations.push(ROUTES_DATA.recommendations.transport[0]);
@@ -105,42 +107,42 @@ const Calculator = {
             recommendations.push(ROUTES_DATA.recommendations.food[1]);
         }
         
-        const impactOrder = { high: 0, medium: 1, low: 2 };
-        recommendations.sort((a, b) => impactOrder[a.impact] - impactOrder[b.impact]);
+        var impactOrder = { high: 0, medium: 1, low: 2 };
+        recommendations.sort(function(a, b) {
+            return impactOrder[a.impact] - impactOrder[b.impact];
+        });
         
         return recommendations.slice(0, 5);
     },
 
-    /**
-     * CALCULATE GOALS - CORRIGIDO
-     * O progresso agora começa em 0% e só aumenta quando o usuário implementar ações
-     */
     calculateGoals: function(currentFootprint, recommendations) {
-        const targetReduction = ROUTES_DATA.goals.default_reduction_target;
-        const targetFootprint = currentFootprint * (1 - targetReduction);
-        const reductionNeeded = currentFootprint - targetFootprint;
+        var targetReduction = ROUTES_DATA.goals.default_reduction_target;
+        var targetFootprint = currentFootprint * (1 - targetReduction);
+        var reductionNeeded = currentFootprint - targetFootprint;
         
-        // PROGRESSO COMEÇA EM 0% - o usuário ainda não implementou nenhuma ação
-        // Em um sistema real, isso seria atualizado conforme o usuário marca ações como concluídas
-        const progressPercent = 0;
+        var progressPercent = 0;
         
-        // Calcular conquistas baseado no progresso atual (0%)
-        const achievements = [];
-        for (const achievement of ROUTES_DATA.goals.achievements) {
+        var achievements = [];
+        for (var i = 0; i < ROUTES_DATA.goals.achievements.length; i++) {
+            var achievement = ROUTES_DATA.goals.achievements[i];
             if (progressPercent >= achievement.threshold) {
                 achievements.push(achievement);
             }
+        }
+        
+        var potentialReduction = 0;
+        for (var j = 0; j < recommendations.length; j++) {
+            potentialReduction = potentialReduction + recommendations[j].reduction;
         }
         
         return {
             current: currentFootprint,
             target: targetFootprint.toFixed(1),
             reduction_needed: reductionNeeded.toFixed(1),
-            reduction_target: `${targetReduction * 100}%`,
+            reduction_target: (targetReduction * 100) + '%',
             progress_percent: progressPercent,
             achievements: achievements,
-            // Adicionar informações sobre potencial de redução
-            potential_reduction: recommendations.reduce((sum, rec) => sum + rec.reduction, 0).toFixed(1),
+            potential_reduction: potentialReduction.toFixed(1),
             recommendations_count: recommendations.length
         };
     }
