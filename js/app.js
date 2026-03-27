@@ -1,5 +1,5 @@
 /**
- * APP.js
+ * APP.js - CORRIGIDO
  * Main application controller and initialization
  */
 
@@ -84,24 +84,35 @@ function processAgents() {
     
     setTimeout(() => {
         try {
+            // Calculate emissions
             const emissions = Calculator.calculateTotalEmissions(appState.answers);
             appState.emissions = emissions;
             
+            // Generate analogies
             const analogies = Calculator.generateAnalogies(parseFloat(emissions.total_ton));
+            
+            // Create explanation data with correct percentages
             const explanationData = {
                 total_ton: emissions.total_ton,
-                breakdown: emissions.percentages,
+                breakdown: {
+                    transporte: parseInt(emissions.percentages.transport),
+                    energia: parseInt(emissions.percentages.energy),
+                    alimentacao: parseInt(emissions.percentages.food)
+                },
                 comparison: emissions.comparison_vs_brazil,
                 analogies: analogies
             };
             
+            // Generate recommendations
             const recommendations = Calculator.generateRecommendations(appState.answers, emissions);
             appState.recommendations = recommendations;
             
+            // Calculate goals
             const goals = Calculator.calculateGoals(parseFloat(emissions.total_ton), recommendations);
             appState.goals = goals;
             
-            const resultsHtml = UI.renderResults(emissions, explanationData, recommendations, goals);
+            // Render all sections
+            const resultsHtml = UI.renderResults(emissions, explanationData);
             const recommendationsHtml = UI.renderRecommendations(recommendations);
             const goalsHtml = UI.renderGoals(goals);
             
@@ -109,20 +120,26 @@ function processAgents() {
             document.getElementById('recommendations-content').innerHTML = recommendationsHtml;
             document.getElementById('goals-content').innerHTML = goalsHtml;
             
+            // Show result sections
             UI.showElement('results');
             UI.showElement('recommendations');
             UI.showElement('goals');
             
+            // Update progress to completed
             appState.currentAgent = appState.totalAgents;
             UI.updateProgress(appState.currentAgent, appState.totalAgents);
             
+            // Hide agent card and navigation
             document.getElementById('navigation').classList.add('hidden');
             document.getElementById('agentCard').classList.add('hidden');
             
+            // Scroll to results
             UI.scrollToElement('results');
             
+            console.log('✅ Cálculo concluído:', emissions);
+            
         } catch (error) {
-            console.error('Error:', error);
+            console.error('❌ Erro:', error);
             alert('❌ Ocorreu um erro ao calcular. Por favor, tente novamente.');
         } finally {
             UI.hideLoading(submitButton);

@@ -1,5 +1,5 @@
 /**
- * CALCULATOR.js
+ * CALCULATOR.js - CORRIGIDO
  * All calculation logic for carbon footprint
  */
 
@@ -44,11 +44,12 @@ const Calculator = {
         const totalKg = transport + energy + food;
         const totalTon = totalKg / 1000;
         
+        // Calculate percentages - garantir que sejam números inteiros
         const total = transport + energy + food;
         const percentages = {
-            transport: total > 0 ? (transport / total * 100).toFixed(0) : 0,
-            energy: total > 0 ? (energy / total * 100).toFixed(0) : 0,
-            food: total > 0 ? (food / total * 100).toFixed(0) : 0
+            transport: total > 0 ? Math.round((transport / total) * 100) : 0,
+            energy: total > 0 ? Math.round((energy / total) * 100) : 0,
+            food: total > 0 ? Math.round((food / total) * 100) : 0
         };
         
         const comparison = ((totalTon - CONFIG.BRAZIL_AVG_FOOTPRINT) / CONFIG.BRAZIL_AVG_FOOTPRINT * 100).toFixed(0);

@@ -1,10 +1,11 @@
 /**
- * UI.js
+ * UI.js - CORRIGIDO
  * DOM manipulation and UI rendering functions
  */
 
 const UI = {
     formatNumber: function(number, decimals = 2) {
+        if (isNaN(number)) return '0,00';
         return number.toLocaleString('pt-BR', {
             minimumFractionDigits: decimals,
             maximumFractionDigits: decimals
@@ -12,6 +13,7 @@ const UI = {
     },
 
     formatCurrency: function(value) {
+        if (isNaN(value)) return 'R$ 0,00';
         return value.toLocaleString('pt-BR', {
             style: 'currency',
             currency: 'BRL'
@@ -112,42 +114,47 @@ const UI = {
         return html;
     },
 
-    renderResults: function(emissions, explanations, recommendations, goals) {
+    renderResults: function(emissions, explanationData) {
+        // Garantir que os valores são números válidos
+        const transportPercent = explanationData.breakdown.transporte || 0;
+        const energyPercent = explanationData.breakdown.energia || 0;
+        const foodPercent = explanationData.breakdown.alimentacao || 0;
+        
         let html = `
             <div class="results__grid">
                 <div class="results__card results__card--highlight">
                     <div class="results__card-icon">🌿</div>
                     <div class="results__card-content">
-                        <h3 class="results__card-title">Pegada Total</h3>
-                        <p class="results__card-value results__card-value--large">${explanations.total_ton} tCO₂e</p>
-                        <p class="results__card-subtitle">vs Brasil: ${explanations.comparison}</p>
+                        <h3 class="results__card-title">PEGADA TOTAL</h3>
+                        <p class="results__card-value results__card-value--large">${explanationData.total_ton} tCO₂e</p>
+                        <p class="results__card-subtitle">vs Brasil: ${explanationData.comparison}</p>
                     </div>
                 </div>
                 
                 <div class="results__card">
                     <div class="results__card-icon">🚗</div>
                     <div class="results__card-content">
-                        <h3 class="results__card-title">Transporte</h3>
+                        <h3 class="results__card-title">TRANSPORTE</h3>
                         <p class="results__card-value">${this.formatNumber(emissions.transport_kg)} kg</p>
-                        <p class="results__card-subtitle">${explanations.breakdown.transporte}% do total</p>
+                        <p class="results__card-subtitle">${transportPercent}% do total</p>
                     </div>
                 </div>
                 
                 <div class="results__card">
                     <div class="results__card-icon">⚡</div>
                     <div class="results__card-content">
-                        <h3 class="results__card-title">Energia</h3>
+                        <h3 class="results__card-title">ENERGIA</h3>
                         <p class="results__card-value">${this.formatNumber(emissions.energy_kg)} kg</p>
-                        <p class="results__card-subtitle">${explanations.breakdown.energia}% do total</p>
+                        <p class="results__card-subtitle">${energyPercent}% do total</p>
                     </div>
                 </div>
                 
                 <div class="results__card">
                     <div class="results__card-icon">🍖</div>
                     <div class="results__card-content">
-                        <h3 class="results__card-title">Alimentação</h3>
+                        <h3 class="results__card-title">ALIMENTAÇÃO</h3>
                         <p class="results__card-value">${this.formatNumber(emissions.food_kg)} kg</p>
-                        <p class="results__card-subtitle">${explanations.breakdown.alimentacao}% do total</p>
+                        <p class="results__card-subtitle">${foodPercent}% do total</p>
                     </div>
                 </div>
             </div>
@@ -156,28 +163,28 @@ const UI = {
                 <div class="breakdown__item">
                     <div class="breakdown__header">
                         <span>🚗 Transporte</span>
-                        <span>${explanations.breakdown.transporte}%</span>
+                        <span>${transportPercent}%</span>
                     </div>
                     <div class="breakdown__bar">
-                        <div class="breakdown__fill" style="width: ${explanations.breakdown.transporte}%; background-color: #3b82f6;"></div>
+                        <div class="breakdown__fill" style="width: ${transportPercent}%; background-color: #3b82f6;"></div>
                     </div>
                 </div>
                 <div class="breakdown__item">
                     <div class="breakdown__header">
                         <span>⚡ Energia</span>
-                        <span>${explanations.breakdown.energia}%</span>
+                        <span>${energyPercent}%</span>
                     </div>
                     <div class="breakdown__bar">
-                        <div class="breakdown__fill" style="width: ${explanations.breakdown.energia}%; background-color: #f59e0b;"></div>
+                        <div class="breakdown__fill" style="width: ${energyPercent}%; background-color: #f59e0b;"></div>
                     </div>
                 </div>
                 <div class="breakdown__item">
                     <div class="breakdown__header">
                         <span>🍖 Alimentação</span>
-                        <span>${explanations.breakdown.alimentacao}%</span>
+                        <span>${foodPercent}%</span>
                     </div>
                     <div class="breakdown__bar">
-                        <div class="breakdown__fill" style="width: ${explanations.breakdown.alimentacao}%; background-color: #10b981;"></div>
+                        <div class="breakdown__fill" style="width: ${foodPercent}%; background-color: #10b981;"></div>
                     </div>
                 </div>
             </div>
@@ -185,9 +192,9 @@ const UI = {
             <div class="analogies">
                 <div class="analogies__title">🌳 Para você entender melhor:</div>
                 <ul class="analogies__list">
-                    <li class="analogies__item">🚗 Dirigir um carro médio por <strong>${explanations.analogies.car_km} km</strong> em um ano</li>
-                    <li class="analogies__item">🌲 Plantar <strong>${explanations.analogies.trees}</strong> árvores para compensar</li>
-                    <li class="analogies__item">✈️ Voar por <strong>${explanations.analogies.flight_hours} horas</strong> em um avião</li>
+                    <li class="analogies__item">🚗 Dirigir um carro médio por <strong>${explanationData.analogies.car_km} km</strong> em um ano</li>
+                    <li class="analogies__item">🌲 Plantar <strong>${explanationData.analogies.trees}</strong> árvores para compensar</li>
+                    <li class="analogies__item">✈️ Voar por <strong>${explanationData.analogies.flight_hours} horas</strong> em um avião</li>
                 </ul>
             </div>
         `;
@@ -196,6 +203,10 @@ const UI = {
     },
 
     renderRecommendations: function(recommendations) {
+        if (!recommendations || recommendations.length === 0) {
+            return '<p>Nenhuma recomendação disponível no momento.</p>';
+        }
+        
         let html = '<div class="results__grid">';
         
         for (const rec of recommendations) {
@@ -222,6 +233,8 @@ const UI = {
     },
 
     renderGoals: function(goals) {
+        if (!goals) return '<p>Carregando metas...</p>';
+        
         let html = `
             <div class="results__grid">
                 <div class="results__card">
@@ -250,8 +263,10 @@ const UI = {
             </div>
         `;
         
-        for (const achievement of goals.achievements) {
-            html += `<span class="badge">${achievement.title}</span>`;
+        if (goals.achievements && goals.achievements.length > 0) {
+            for (const achievement of goals.achievements) {
+                html += `<span class="badge">${achievement.title}</span>`;
+            }
         }
         
         return html;
