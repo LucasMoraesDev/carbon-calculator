@@ -2,20 +2,6 @@
 
 A complete carbon footprint calculator built with 7 specialized agents that work together to calculate, explain, and help reduce your environmental impact.
 
-## 🏗️ Project Structure
-
-carbon-calculator/
-├── index.html # Main HTML file
-├── css/
-│ └── style.css # Complete styles
-├── js/
-│ ├── config.js # Global configuration & emission constants
-│ ├── routes-data.js # Question routes and data structure
-│ ├── calculator.js # All calculation logic
-│ ├── ui.js # DOM manipulation & rendering
-│ └── app.js # Main application controller
-└── README.md # Documentation
-
 ## 🤖 The 7 Agents
 
 | Agent | Responsibility |
